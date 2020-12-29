@@ -28,6 +28,9 @@ class AogokeClient(discord.Client):
 	async def callDeactivation(self, context):
 		await context.channel.send("有別的事情的話請再叫我!")
 		self.activeStatus = False
+		self.activeStep = ""
+		self.activeIntention = ""
+		self.activeUser = None
 		await self.change_presence(status=discord.Status.online)
 
 	async def processRequests(self, context):
@@ -40,7 +43,7 @@ class AogokeClient(discord.Client):
 		await self.loop.create_task(self.background(),name="cli prompt")
 
 	async def on_message(self, message):
-		if (f"<@!{self.user.id}>" in message.content) and (not self.activeStatus):
+		if (f"{self.user.id}" in message.content) and (not self.activeStatus):
 			await self.callActivate(message)
 		elif self.activeStatus and (self.activeUser == message.author.id):
 			await self.processRequests(message)

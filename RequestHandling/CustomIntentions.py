@@ -40,7 +40,7 @@ async def weather_begin(client, context):
 	if matches:
 		result["status"] = matches.group(0)
 	#temp
-	matches = re.search(r'(?<=<span class="wob_t TVtOme" id="wob_tm" style="display:inline">)[a-z|A-Z|0-9|\s|\,]*(?=<\/span>)',response)
+	matches = re.search(r'(?<=<span class="wob_t TVtOme" id="wob_tm" style="display:inline">)[\-|a-z|A-Z|0-9|\s|\,]*(?=<\/span>)',response)
 	if matches:
 		result["temp"] = matches.group(0)
 	#preciptation
