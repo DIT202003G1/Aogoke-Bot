@@ -31,6 +31,6 @@ async def changeStatus(args,client):
 		log(f"This command takes 1 argument","CLI")
 		return
 	if args[0] not in ("online","offline","idle","dnd","do_not_disturb","invisible"):
-		log(f"unknown status: {args[0]}","CLI")
+		log(f"Change Status: Unknown status: {args[0]}","CLI",True)
 		return
 	await client.change_presence( status = getattr(Status,args[0]))
