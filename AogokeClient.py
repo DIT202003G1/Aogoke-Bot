@@ -18,10 +18,11 @@ class AogokeClient(discord.Client):
 		await channel.send("我在!")
 		self.active_state = True
 		self.active_user = user.id
+		await client.change_presence(status=discord.Status.dnd)
 
 	async def on_ready(self):
 		log('Logged on as {0}!'.format(self.user))
-		await self.loop.create_task(self.background(),name="hi")
+		await self.loop.create_task(self.background(),name="cli prompt")
 
 	async def on_message(self, message):
 		if (f"<@!{self.user.id}>" in message.content) and (not self.active_state):
@@ -30,4 +31,4 @@ class AogokeClient(discord.Client):
 	async def background(self):
 		await asyncio.sleep(0.3)
 		await interpret(self)
-		await self.loop.create_task(self.background(),name="hi")
+		await self.loop.create_task(self.background(),name="cli prompt")

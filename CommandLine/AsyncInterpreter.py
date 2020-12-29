@@ -26,6 +26,6 @@ async def interpret(client):
 
 	log("Executing `" + raw.strip() + "`", logType="CLI")
 	if commands[cmdName][1]:
-		await commands[cmdName][0](args)
+		await commands[cmdName][0](args,client)
 	else:
 		commands[cmdName][0](args,client)

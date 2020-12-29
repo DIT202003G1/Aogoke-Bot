@@ -1,6 +1,7 @@
 from CommandLine.CommandControl import cliCommand, commands
 from Utils.StringManipulation import textPadding
 from Utils.Log import log
+from discord import Status
 import asyncio
 import sys
 
@@ -22,3 +23,14 @@ def commandHelp(args,client):
 		cmdName = textPadding(i, longest)
 		cmdDescription = val[0].__doc__
 		log(f"\t{cmdName}\t{cmdDescription}","CLI")
+
+@cliCommand(name="cs", isAsync=True)
+async def changeStatus(args,client):
+	"""Change the bot status, for example: `changeStatus idle`. idle, offline, online, dnd, invisible"""
+	if not len(args):
+		log(f"This command takes 1 argument","CLI")
+		return
+	if args[0] not in ("online","offline","idle","dnd","do_not_disturb","invisible"):
+		log(f"unknown status: {args[0]}","CLI")
+		return
+	await client.change_presence( status = getattr(Status,args[0]))
