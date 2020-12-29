@@ -1,0 +1,6 @@
+{
+	"intentions":{
+		"cancel":[["結束","再見","取消","沒事","算了"]],
+		"weather":[["天氣","溫度","氣候","適度","氣溫","weather","temperature","humidity","humid"],["如何","怎麼樣","怎樣","怎麽","什麼","預報","forcast","how","what"]]
+	}
+}

@@ -1,5 +1,5 @@
 from AogokeClient import AogokeClient
-# from CommandLine.CustomCommands import registerCommands
+import Utils, RequestHandling, CommandLine #Init modules
 import AogokeClient as ac
 import json
 import sys
