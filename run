@@ -1,3 +1,8 @@
 #!/bin/sh
-bpython AogokeBot.py
+if [ $AODebug = "true" ]; then
+	bpython -i AogokeBot.py
+else
+	bpython AogokeBot.py
+fi
+
 find . -type d -name  "__pycache__" -exec rm -r {} +

@@ -3,9 +3,9 @@ from CommandLine.CustomCommands import registerCommands
 import AogokeClient as ac
 import json
 import sys
+import os
 
-DEBUG = False
-# DEBUG = True
+DEBUG = os.environ["AODebug"] == "true"
 
 with open("AogokeConfig.json","r") as r:
 	AogokeConfig = json.load(r)
