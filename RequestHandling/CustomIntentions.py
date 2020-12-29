@@ -1,5 +1,6 @@
 from RequestHandling.IntentionControl import useCase
 from six.moves.urllib.parse import quote
+from Utils.Log import log
 import requests
 import re
 
@@ -75,5 +76,69 @@ async def weather_begin(client, context):
 			await context.channel.send("很抱歉  我未能查找到任何天氣資訊  或  查詢的過程中出錯 (請聯繫開發者)\n你可以嘗試換一個地方或問法")
 	else:
 		await context.channel.send("很抱歉  我未能查找到任何天氣資訊\n你可以嘗試換一個地方或問法!")
+
+	return True
+
+#Currency
+@useCase("currency","begin")
+async def weather_begin(client, context):
+	await context.channel.send("正在查詢 請稍候")
+	url = r"https://www.google.com/search?q=" + quote(context.content)
+	headers = {
+		'User-Agent':"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+	}
+	response = requests.get(url,headers=headers).text
+	
+	result = {}
+	secondaryResult = {}
+
+	searches = {
+		"from":r'(?<=<span class="DFlfde eNFL1">)[\-|a-z|A-Z|0-9|\s|\,]*(?=<\/span>)',
+		"fromName":r'(?<=\<span\ class\=\"vLqKYe\"\ data-mid\=\"\/m\/.{6}\"\ data\-name\=\").{0,50}(?=\"\>)',
+		"to":r'<span class="DFlfde SwHCTb" data-precision="\d*" data-value="\d*\.\d*">',
+		"toName":r'(?<=\<span\ class\=\"MWvIVe\"\ data\-mid\=\"\/m\/.{6}"\ data\-name\=\").{1,30}(?=\"\>)'
+	}
+	secondarySearches = {
+		"to":r'[\d|\.|\,]*(?=</span>)'
+	}
+	for i in searches:
+		val = searches[i]
+		matches = re.search(val, response)
+		if matches:
+			result[i] = matches
+
+	if "toName" not in result:
+		result["toName"] = re.search(r'(?<=\<span\ class\=\"MWvIVe\"\ data\-mid\=\"\/m\/.{5}"\ data\-name\=\").{1,30}(?=\"\>)',response)
+
+	if "toName" not in result:
+		result["toName"] = re.search(r'(?<=\<span\ class\=\"MWvIVe\"\ data\-mid\=\"\/m\/.{4}"\ data\-name\=\").{1,30}(?=\"\>)',response)
+
+	if "toName" not in result:
+		result["toName"] = re.search(r'(?<=\<span\ class\=\"MWvIVe\"\ data\-mid\=\"\/m\/.{3}"\ data\-name\=\").{1,30}(?=\"\>)',response)
+
+	if "toName" not in result:
+		result["toName"] = re.search(r'(?<=\<span\ class\=\"MWvIVe\"\ data\-mid\=\"\/m\/.{2}"\ data\-name\=\").{1,30}(?=\"\>)',response)
+
+	if "toName" not in result:
+		result["toName"] = re.search(r'(?<=\<span\ class\=\"MWvIVe\"\ data\-mid\=\"\/m\/.{1}"\ data\-name\=\").{1,30}(?=\"\>)',response)
+
+	for i in result:
+		val = result[i]
+		if i in ("from","fromName","toName"):
+			secondaryResult[i] = val.group(0)
+		else:
+			span = val.span(0)
+			secondaryText = response[span[0]:]
+			matches = re.search(secondarySearches[i],secondaryText)
+			if matches:
+				secondaryResult[i] = matches.group(0)
+
+	if secondaryResult:
+		try:
+			await context.channel.send(f'{secondaryResult["from"]}{secondaryResult["fromName"]} 可以兌換成 {secondaryResult["to"]}{secondaryResult["toName"]}')
+		except Exception:
+			await context.channel.send("很抱歉  我未能查找到任何匯率資訊  或  查詢的過程中出錯 (請聯繫開發者)\n你可以嘗試換一種貨幣或問法")
+	else:
+		await context.channel.send(f'很抱歉  我未能查找到任何匯率資訊\n你可以嘗試換一個地方或問法')
 
 	return True
