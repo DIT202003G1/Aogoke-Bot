@@ -3,6 +3,7 @@ import asyncio
 import Utils
 import CommandLine
 from Utils.Log import log
+from CommandLine import CustomCommands
 from CommandLine.AsyncInterpreter import interpret
 
 def connect(client, token):

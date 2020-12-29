@@ -25,4 +25,7 @@ async def interpret():
 		return
 
 	log("Executing `" + raw.strip() + "`", logType="CLI")
-	commands[cmdName][0](args)
+	if commands[cmdName][1]:
+		await commands[cmdName][0](args)
+	else:
+		commands[cmdName][0](args)

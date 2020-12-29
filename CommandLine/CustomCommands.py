@@ -1,12 +1,15 @@
-from CommandLine.CommandControl import registerCommand, commands
+from CommandLine.CommandControl import cliCommand, commands
 from Utils.StringManipulation import textPadding
 from Utils.Log import log
+import asyncio
 import sys
 
+@cliCommand(name="exit")
 def exitClient(args):
 	"""Exit the current program with exit code 0"""
 	sys.exit(0)
 
+@cliCommand(name="help")
 def commandHelp(args):
 	"""Show a list of available commands."""
 	log(f"Showing help menu", "CLI")
@@ -19,7 +22,3 @@ def commandHelp(args):
 		cmdName = textPadding(i, longest)
 		cmdDescription = val[0].__doc__
 		log(f"\t{cmdName}\t{cmdDescription}","CLI")
-
-def registerCommands():
-	registerCommand("exit",exitClient)
-	registerCommand("help",commandHelp)
