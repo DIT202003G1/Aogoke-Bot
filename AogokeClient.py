@@ -16,7 +16,7 @@ class AogokeClient(discord.Client):
 
 	async def callActivate(self,channel,user):
 		await channel.send("我在!")
-		self.active_state = False
+		self.active_state = True
 		self.active_user = user.id
 
 	async def on_ready(self):
@@ -29,5 +29,5 @@ class AogokeClient(discord.Client):
 
 	async def background(self):
 		await asyncio.sleep(0.3)
-		await interpret()
+		await interpret(self)
 		await self.loop.create_task(self.background(),name="hi")

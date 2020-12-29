@@ -5,12 +5,12 @@ import asyncio
 import sys
 
 @cliCommand(name="exit")
-def exitClient(args):
+def exitClient(args,client):
 	"""Exit the current program with exit code 0"""
 	sys.exit(0)
 
 @cliCommand(name="help")
-def commandHelp(args):
+def commandHelp(args,client):
 	"""Show a list of available commands."""
 	log(f"Showing help menu", "CLI")
 	longest = 0

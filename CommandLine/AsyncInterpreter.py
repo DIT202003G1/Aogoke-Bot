@@ -12,7 +12,7 @@ async def asyncInput(prompt: str = ""):
 			executor, sys.stdin.readline
 		)).rstrip()
 
-async def interpret():
+async def interpret(client):
 	raw = await asyncInput("COMMAND> ")
 	if not raw.strip():
 		return
@@ -28,4 +28,4 @@ async def interpret():
 	if commands[cmdName][1]:
 		await commands[cmdName][0](args)
 	else:
-		commands[cmdName][0](args)
+		commands[cmdName][0](args,client)
