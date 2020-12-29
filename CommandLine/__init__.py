@@ -1,3 +1,3 @@
 from Utils.Log import log
 
-log("Loaded Utils")
+log("Loaded CommandLines")
