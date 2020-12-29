@@ -21,7 +21,7 @@ async def interpret(client):
 	args = raw.strip().split(" ")[1:]
 	
 	if cmdName not in commands:
-		log(f"Command {cmdName} was not found. Enter 'help' for list of available commands", logType="CLI", True)
+		log(f"Command {cmdName} was not found. Enter 'help' for list of available commands", "CLI", True)
 		return
 
 	log("Executing `" + raw.strip() + "`", logType="CLI")
