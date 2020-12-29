@@ -107,20 +107,15 @@ async def weather_begin(client, context):
 		if matches:
 			result[i] = matches
 
-	if "toName" not in result:
-		result["toName"] = re.search(r'(?<=\<span\ class\=\"MWvIVe\"\ data\-mid\=\"\/m\/.{5}"\ data\-name\=\").{1,30}(?=\"\>)',response)
-
-	if "toName" not in result:
-		result["toName"] = re.search(r'(?<=\<span\ class\=\"MWvIVe\"\ data\-mid\=\"\/m\/.{4}"\ data\-name\=\").{1,30}(?=\"\>)',response)
-
-	if "toName" not in result:
-		result["toName"] = re.search(r'(?<=\<span\ class\=\"MWvIVe\"\ data\-mid\=\"\/m\/.{3}"\ data\-name\=\").{1,30}(?=\"\>)',response)
-
-	if "toName" not in result:
-		result["toName"] = re.search(r'(?<=\<span\ class\=\"MWvIVe\"\ data\-mid\=\"\/m\/.{2}"\ data\-name\=\").{1,30}(?=\"\>)',response)
-
-	if "toName" not in result:
-		result["toName"] = re.search(r'(?<=\<span\ class\=\"MWvIVe\"\ data\-mid\=\"\/m\/.{1}"\ data\-name\=\").{1,30}(?=\"\>)',response)
+	for i in range(1,8):
+		if "toName" not in result:
+			match = re.search(r'(?<=\<span\ class\=\"MWvIVe\"\ data\-mid\=\"\/m\/.{'+ str(i) +r'}"\ data\-name\=\").{1,30}(?=\"\>)',response)
+			if match:
+				result["toName"] = match
+		if "fromName" not in result:
+			match = re.search(r'(?<=\<span\ class\=\"vLqKYe\"\ data-mid\=\"\/m\/.{'+str(i)+r'}\"\ data\-name\=\").{0,50}(?=\"\>)',response)
+			if match:
+				result["fromName"] = match
 
 	for i in result:
 		val = result[i]
