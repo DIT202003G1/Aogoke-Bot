@@ -1,7 +1,9 @@
 from RequestHandling.IntentionControl import useCase
 from six.moves.urllib.parse import quote
 from Utils.Log import log
+from youtube_search import YoutubeSearch
 import requests
+import json
 import re
 
 #### True = Usecase has end, False = Usecase continues ####
@@ -9,6 +11,32 @@ import re
 #Cancel usecase
 @useCase('cancel','begin')
 async def cancel_begin(client, context):
+	return True
+
+#Youtube search
+@useCase("youtube_search","begin")
+async def youtube_begin(client,context):
+	await context.channel.send("請輸入搜尋關鍵字")
+	client.activeStep = "keywords"
+	return False
+
+@useCase("youtube_search","keywords")
+async def youtube_keywords(client,context):
+	await context.channel.send("正在搜尋中...請稍候")
+	result = json.loads(YoutubeSearch(context.content, max_results=1).to_json())
+	video = result["videos"]
+	if video:
+		await context.channel.send(f"""```Meta Data 元資料 (language based on bot server location):
+    Vodeo ID: {video[0]['id']}
+    Vodeo Title: {video[0]['title']}
+    Channel: {video[0]['channel']}
+    Description: {video[0]['long_desc']}
+    Duration: {video[0]['duration']}
+    Publish Time: {video[0]['publish_time']}
+    View Count: {video[0]['views']}```""")
+		await context.channel.send("https://www.youtube.com/"+video[0]["url_suffix"])
+	else:
+		await context.channel.send("未搜尋到任何影片")
 	return True
 
 #Null Usecase Handling
@@ -19,7 +47,7 @@ async def null_begin(client,context):
 	client.activeIntention = ""
 	return False
 
-# Weather
+#Weather
 @useCase("weather","begin")
 async def weather_begin(client, context):
 	await context.channel.send("正在查詢 請稍候")
